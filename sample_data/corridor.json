@@ -1,0 +1,99 @@
+{
+  "sample": "corridor",
+  "label": "北廊联动样例",
+  "shift": "N26-1121",
+  "start": "2026-11-21T08:00:00+08:00",
+  "end": "2026-11-21T16:00:00+08:00",
+  "cabinet_hours": [
+    {
+      "id": "CV-17",
+      "label": "北廊 · 青瓷橱窗",
+      "upper_mm": 1550,
+      "lower_mm": 550,
+      "temp_limit": "2.0",
+      "rh_limit": "8.0"
+    },
+    {
+      "id": "CV-21",
+      "label": "北廊 · 漆器橱窗",
+      "upper_mm": 1550,
+      "lower_mm": 550,
+      "temp_limit": "2.0",
+      "rh_limit": "8.0"
+    },
+    {
+      "id": "CV-31",
+      "label": "北廊 · 石雕橱窗",
+      "upper_mm": 1650,
+      "lower_mm": 450,
+      "temp_limit": "2.0",
+      "rh_limit": "8.0"
+    }
+  ],
+  "tolerance_seconds": 240,
+  "late_seconds": 900,
+  "sustained_hours": 2,
+  "deployments": [
+    {
+      "probe": "1001",
+      "cabinet": "CV-17",
+      "level": "upper",
+      "start": "2026-11-21T08:00:00+08:00",
+      "end": "2026-11-21T16:00:00+08:00"
+    },
+    {
+      "probe": "1012",
+      "cabinet": "CV-17",
+      "level": "lower",
+      "start": "2026-11-21T08:00:00+08:00",
+      "end": "2026-11-21T16:00:00+08:00"
+    },
+    {
+      "probe": "2001",
+      "cabinet": "CV-21",
+      "level": "upper",
+      "start": "2026-11-21T08:00:00+08:00",
+      "end": "2026-11-21T16:00:00+08:00"
+    },
+    {
+      "probe": "2012",
+      "cabinet": "CV-21",
+      "level": "lower",
+      "start": "2026-11-21T08:00:00+08:00",
+      "end": "2026-11-21T16:00:00+08:00"
+    },
+    {
+      "probe": "3001",
+      "cabinet": "CV-31",
+      "level": "upper",
+      "start": "2026-11-21T08:00:00+08:00",
+      "end": "2026-11-21T16:00:00+08:00"
+    },
+    {
+      "probe": "3012",
+      "cabinet": "CV-31",
+      "level": "lower",
+      "start": "2026-11-21T08:00:00+08:00",
+      "end": "2026-11-21T16:00:00+08:00"
+    }
+  ],
+  "tickets": [
+    {
+      "id": "AL-1101",
+      "cabinet": "CV-17",
+      "at": "2026-11-21T01:15:00Z"
+    },
+    {
+      "id": "AL-1102",
+      "cabinet": "CV-21",
+      "at": "2026-11-21T01:45:00Z"
+    },
+    {
+      "id": "AL-1103",
+      "cabinet": "CV-31",
+      "at": "2026-11-21T04:30:00Z"
+    }
+  ],
+  "csv": "corridor-points.csv",
+  "records": 48
+}
