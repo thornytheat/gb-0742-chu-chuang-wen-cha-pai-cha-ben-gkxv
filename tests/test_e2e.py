@@ -3,9 +3,9 @@ from fastapi.testclient import TestClient
 from app.main import create_app
 
 
-def test_seven_business_entrances_and_replay_with_real_fixture(client,base):
+def test_business_entrances_and_replay_with_real_fixture(client,base):
     cases = {"/intake":"rows","/assignment":"windows","/pairing/CV-17":"slots","/gradient/CV-17":"slots",
-             "/episodes/CV-17/CV-17-A03":"rows","/audit":"tickets","":"hashes","/export":"manifest"}
+             "/episodes/CV-17/CV-17-A03":"rows","/attribution":"verdicts","/audit":"tickets","":"hashes","/export":"manifest"}
     for name, key in cases.items():
         live = client.get(base + name)
         assert live.status_code == 200 and live.json()[key], name
@@ -14,7 +14,7 @@ def test_seven_business_entrances_and_replay_with_real_fixture(client,base):
 
 def test_all_pages_render_expected_heading_navigation_and_controls(client):
     pages = {"/":"垂直梯度","/intake":"点位采信","/assignment":"探头迁移","/pairing":"时窗配准",
-             "/episodes":"异常持续","/audit":"值班单勾稽","/archive":"证据归卷"}
+             "/episodes":"异常持续","/attribution":"跨柜归因","/audit":"值班单勾稽","/archive":"证据归卷"}
     for path, name in pages.items():
         page = client.get(path)
         assert page.status_code == 200

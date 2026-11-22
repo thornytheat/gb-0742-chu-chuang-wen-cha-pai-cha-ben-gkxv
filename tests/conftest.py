@@ -16,6 +16,16 @@ def snapshot(package):
     return evaluate(package)
 
 
+@pytest.fixture(scope="session")
+def package_closure():
+    return load_sample("closure")
+
+
+@pytest.fixture(scope="session")
+def snapshot_closure(package_closure):
+    return evaluate(package_closure)
+
+
 @pytest.fixture
 def client(tmp_path):
     with TestClient(create_app(tmp_path / "glass.sqlite3", seed=False)) as test:

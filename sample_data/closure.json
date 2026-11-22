@@ -1,0 +1,94 @@
+{
+  "sample": "closure",
+  "label": "闭馆跨柜归因样例",
+  "shift": "N26-1121",
+  "start": "2026-11-21T08:00:00+08:00",
+  "end": "2026-11-21T16:00:00+08:00",
+  "cabinet_hours": [
+    {
+      "id": "CV-17",
+      "label": "北廊 · 青瓷橱窗",
+      "upper_mm": 1550,
+      "lower_mm": 550,
+      "temp_limit": "2.0",
+      "rh_limit": "8.0"
+    },
+    {
+      "id": "CV-21",
+      "label": "北廊 · 漆器橱窗",
+      "upper_mm": 1650,
+      "lower_mm": 450,
+      "temp_limit": "2.0",
+      "rh_limit": "8.0"
+    },
+    {
+      "id": "CV-33",
+      "label": "西廊 · 玉器橱窗",
+      "upper_mm": 1500,
+      "lower_mm": 500,
+      "temp_limit": "2.0",
+      "rh_limit": "8.0"
+    }
+  ],
+  "tolerance_seconds": 240,
+  "late_seconds": 900,
+  "sustained_hours": 2,
+  "deployments": [
+    {
+      "probe": "0001",
+      "cabinet": "CV-17",
+      "level": "upper",
+      "start": "2026-11-21T08:00:00+08:00",
+      "end": "2026-11-21T16:00:00+08:00"
+    },
+    {
+      "probe": "0012",
+      "cabinet": "CV-17",
+      "level": "lower",
+      "start": "2026-11-21T08:00:00+08:00",
+      "end": "2026-11-21T16:00:00+08:00"
+    },
+    {
+      "probe": "0008",
+      "cabinet": "CV-21",
+      "level": "upper",
+      "start": "2026-11-21T08:00:00+08:00",
+      "end": "2026-11-21T16:00:00+08:00"
+    },
+    {
+      "probe": "0014",
+      "cabinet": "CV-21",
+      "level": "lower",
+      "start": "2026-11-21T08:00:00+08:00",
+      "end": "2026-11-21T16:00:00+08:00"
+    },
+    {
+      "probe": "0021",
+      "cabinet": "CV-33",
+      "level": "upper",
+      "start": "2026-11-21T08:00:00+08:00",
+      "end": "2026-11-21T16:00:00+08:00"
+    },
+    {
+      "probe": "0022",
+      "cabinet": "CV-33",
+      "level": "lower",
+      "start": "2026-11-21T08:00:00+08:00",
+      "end": "2026-11-21T16:00:00+08:00"
+    }
+  ],
+  "tickets": [
+    {
+      "id": "AL-0801",
+      "cabinet": "CV-17",
+      "at": "2026-11-21T09:15:00+08:00"
+    },
+    {
+      "id": "AL-0802",
+      "cabinet": "CV-21",
+      "at": "2026-11-21T09:20:00+08:00"
+    }
+  ],
+  "csv": "closure-points.csv",
+  "records": 46
+}

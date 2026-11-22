@@ -25,6 +25,13 @@
 .abnormal, .state.sustained { color: var(--unstable); }
 .missing { color: var(--missing); }
 .state.transient, .state.uncertain { color: var(--warn); }
+.state.common_event { color: var(--unstable); }
+.state.single_cabinet { color: var(--accent-dark); }
+.state.insufficient_evidence { color: var(--warn); }
+.attribution-events { display: grid; gap: 7px; }
+.attribution-events .proof-slip { margin-top: 0; }
+.gap-list { display: grid; gap: 3px; margin-top: 6px; }
+.gap-list .state { font-size: 10px; }
 .rule-list { display: grid; grid-template-columns: minmax(55px, .78fr) minmax(0, 1fr); gap: 0 6px; }
 .rule-list dt, .rule-list dd { padding: 4px 0; min-width: 0; border-bottom: 1px solid var(--ruling); }
 .rule-list dt { font: 12px/1.5 var(--serif); color: var(--ink-dim); }

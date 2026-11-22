@@ -2,6 +2,7 @@ export const q = (selector, root = document) => root.querySelector(selector);
 export const put = (selector, value) => { q(selector).textContent = value ?? '—'; };
 export const words = {
   STABLE:'稳定', ABNORMAL:'异常', MISSING:'缺证', UNCERTAIN:'跨阈值', SUSTAINED:'持续异常', TRANSIENT:'瞬时异常',
+  COMMON_EVENT:'共同环境事件', SINGLE_CABINET:'单柜事件', INSUFFICIENT_EVIDENCE:'证据不足保留',
   MATCHED:'已核销', DUPLICATE_ALARM:'重复报警', MISSING_EVIDENCE:'证据不足', OUTSIDE_SHIFT:'班次外报警',
   STABLE_AT_ALARM:'稳定时报警', TRANSIENT_ONLY:'仅瞬时异常', UNKNOWN_CABINET:'柜号未知', NO_DEPLOYMENT:'无部署',
   DEPLOYMENT_CONFLICT:'部署重叠', MISSING_UPPER:'缺上层读数', NO_COMPATIBLE_LOWER:'无可用下层读数',

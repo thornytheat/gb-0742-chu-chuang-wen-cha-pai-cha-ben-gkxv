@@ -1,6 +1,7 @@
 from collections import Counter
 
 from app.modules.assignment.windows import DeploymentIndex, assign
+from app.modules.attribution.attribution import attribute
 from app.modules.audit.reconcile import reconcile
 from app.modules.episodes.segment import segment
 from app.modules.gradient.grade import grade
@@ -18,6 +19,8 @@ def evaluate(package):
     grades = grade(spec, pairs, rows)
     episodes = segment(grades, spec.sustained_hours)
     audit = reconcile(spec, rows, intake, grades, episodes)
+    attribution = attribute(spec, grades, episodes)
     return {"intake": intake, "rows": rows, "deployments": index.windows, "deployment_conflicts": index.conflicts,
             "pairs": pairs, "unused": unused, "grades": grades, "episodes": episodes, "audit": audit,
+            "attribution": attribution,
             "isolation": dict(sorted(Counter(row["code"] for row in rows if row["disposition"] == "isolated").items()))}

@@ -11,6 +11,7 @@ from app.errors import FieldError
 from app.modules.archive import handler as archive
 from app.modules.archive.service import ArchiveService
 from app.modules.assignment import handler as assignment
+from app.modules.attribution import handler as attribution
 from app.modules.audit import handler as audit
 from app.modules.episodes import handler as episodes
 from app.modules.gradient import handler as gradient
@@ -31,7 +32,7 @@ def create_app(path=None, seed=True):
     app = FastAPI(title="橱窗温差排查本", lifespan=lifespan)
     app.state.archives = ArchiveService(ArchiveStore(path or database_path()))
     app.mount("/static", StaticFiles(directory=ROOT / "app/static"), name="static")
-    for module in (intake, assignment, pairing, gradient, episodes, audit, archive):
+    for module in (intake, assignment, pairing, gradient, episodes, audit, attribution, archive):
         app.include_router(module.router)
     app.include_router(web)
     app.add_exception_handler(FieldError, domain_error)

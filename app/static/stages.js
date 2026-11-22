@@ -180,6 +180,56 @@ async function episodes({get, base, cabinet, run, signal}) {
   else target.replaceChildren(el('p','此柜工作时段无异常。','empty'));
 }
 
+function attributionSlot(slot) {
+  return el('span',`${slot.cabinet} · ${hour(slot.hour)} · ${words[slot.state] ?? slot.state} · 原行 ${rowLabel(slot.upper)}/${rowLabel(slot.lower)}`, 'mono');
+}
+
+async function attribution({get, base, cabinet, signal}) {
+  const data = await get(`${base}/attribution/${cabinet}`);
+  q('#attribution-summary').replaceChildren(
+    entries([['共同环境事件',data.events.length],['共同段',data.counts.COMMON_EVENT],
+      ['单柜段',data.counts.SINGLE_CABINET],['证据不足保留',data.counts.INSUFFICIENT_EVIDENCE]]),
+    ...data.events.map((event) => el('p',`${event.id}：${event.cabinets.join('、')} · ${stamp(event.start)} — ${stamp(event.end)}`,'empty')));
+  const target = q('#attribution-evidence');
+  const show = (item) => {
+    const blocks = el('div',null,'attribution-events');
+    if (item.verdict === 'COMMON_EVENT') {
+      blocks.append(el('p',`同事件 ${item.event} · 以下柜时与本段同时段异常：`));
+      for (const slot of item.shared_evidence) {
+        const slip = el('article',null,'proof-slip');
+        slip.append(el('strong',`${slot.episode} · ${slot.cabinet}`), attributionSlot(slot));
+        blocks.append(slip);
+      }
+    } else {
+      blocks.append(el('p',item.verdict === 'SINGLE_CABINET'
+        ? '相邻柜同时段均为稳定柜时，反证为本柜单柜事件：'
+        : '相邻柜存在缺证柜时，无法排除共同环境波动，保留原段：'));
+      for (const slot of item.counter_evidence) {
+        const slip = el('article',null,'proof-slip');
+        slip.append(el('strong',slot.cabinet), attributionSlot(slot));
+        blocks.append(slip);
+      }
+      if (item.gaps.length) {
+        const gaps = el('div',null,'gap-list');
+        gaps.append(el('strong','缺证柜时'));
+        for (const gap of item.gaps) gaps.append(el('span',`${gap.cabinet} · ${stamp(gap.hour)}`,'mono'));
+        blocks.append(gaps);
+      }
+    }
+    target.replaceChildren(blocks);
+  };
+  table(q('#attribution-verdicts'),data.verdicts,[
+    ['异常段',(row) => pick(row.episode,() => show(row)),'mono'],
+    ['判级',(row) => state(row.kind)],
+    ['归因',(row) => state(row.verdict)],
+    ['事件号','event','mono'],
+    ['处置',(row) => state(row.handled ? 'MATCHED' : 'MISSING_EVIDENCE')],
+    ['起',(row) => stamp(row.start),'mono'],['止',(row) => stamp(row.end),'mono']],
+    '此柜工作时段无异常段。');
+  if (data.verdicts.length) q('#attribution-verdicts button')?.click();
+  else target.replaceChildren(el('p','此柜工作时段无异常。','empty'));
+}
+
 function audit({audit,run}) {
   const hours = audit.hours;
   const rows = audit.row_audit;
@@ -210,4 +260,4 @@ function archive({history,run}) {
     ['持续门槛',`${run.sustained_hours} h`],['耗时',`${run.elapsed_ms} ms`],['归卷柜号',run.cabinets.map((item) => item.id).join('、')]]));
 }
 
-export const stages = {intake, assignment, pairing, gradient, episodes, audit, archive};
+export const stages = {intake, assignment, pairing, gradient, episodes, attribution, audit, archive};

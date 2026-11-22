@@ -9,7 +9,8 @@ templates = Jinja2Templates(directory=ROOT / "app/templates")
 STAGES = {
     "intake": ("点位采信", "/intake"), "assignment": ("探头迁移", "/assignment"),
     "pairing": ("时窗配准", "/pairing"), "gradient": ("垂直梯度", "/"),
-    "episodes": ("异常持续", "/episodes"), "audit": ("值班单勾稽", "/audit"), "archive": ("证据归卷", "/archive"),
+    "episodes": ("异常持续", "/episodes"), "attribution": ("跨柜归因", "/attribution"),
+    "audit": ("值班单勾稽", "/audit"), "archive": ("证据归卷", "/archive"),
 }
 
 
@@ -23,6 +24,7 @@ def health():
 @router.get("/assignment", response_class=HTMLResponse, include_in_schema=False)
 @router.get("/pairing", response_class=HTMLResponse, include_in_schema=False)
 @router.get("/episodes", response_class=HTMLResponse, include_in_schema=False)
+@router.get("/attribution", response_class=HTMLResponse, include_in_schema=False)
 @router.get("/audit", response_class=HTMLResponse, include_in_schema=False)
 @router.get("/archive", response_class=HTMLResponse, include_in_schema=False)
 def workbench(request: Request):

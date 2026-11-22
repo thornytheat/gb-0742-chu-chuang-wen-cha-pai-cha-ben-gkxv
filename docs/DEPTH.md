@@ -11,6 +11,7 @@
 | M3 时窗配准 | 查一对一配对、时差、未用读数 | `GET /api/runs/{run_id}/pairing/{cabinet}` | `app/modules/pairing/matching.py` `app/modules/pairing/schedule.py` | `tests/test_pairing.py` |
 | M4 垂直梯度 | 选择柜时，对照剖面、区间、原行 | `GET /api/runs/{run_id}/gradient/{cabinet}/evidence` | `app/modules/gradient/interval.py` `app/modules/gradient/grade.py` | `tests/test_gradient.py` |
 | M5 异常持续 | 定位连续与瞬时异常段及其原行 | `GET /api/runs/{run_id}/episodes/{cabinet}` | `app/modules/episodes/segment.py` | `tests/test_episodes.py` |
+| M8 跨柜归因 | 区分共同环境事件与单柜事件，证据不足保留原段 | `GET /api/runs/{run_id}/attribution/{cabinet}` | `app/modules/attribution/attribution.py` | `tests/test_attribution.py` `tests/test_attribution_api.py` |
 | M6 值班单勾稽 | 核对柜时与图档行，查报警误报漏报 | `GET /api/runs/{run_id}/audit` | `app/modules/audit/reconcile.py` | `tests/test_audit.py` |
 | M7 证据归卷 | 运行、复算或下载带摘要的归卷 | `POST /api/runs` `POST /api/runs/{run_id}/rerun` `GET /api/runs/{run_id}/export` | `app/modules/archive/pipeline.py` `app/modules/archive/service.py` `app/modules/archive/proof.py` `app/store.py` | `tests/test_archive.py` |
 
@@ -34,8 +35,17 @@
 | TRAP-17 | `night-points.csv` 第二段改中文并换序 | 收报和测量栏对调 | 每段独立映射字段 | `app/modules/intake/readings.py` | `tests/test_intake.py::test_header_switch_changes_field_positions` |
 | TRAP-23 | 探头在 13:00 馆内时间换柜 | 同一时刻两柜采信 | 左闭右开选择新柜 | `app/modules/assignment/windows.py` | `tests/test_assignment.py::test_adjacent_windows_are_half_open_at_exact_move` |
 | TRAP-25 | 在混合部署契约上叠加同柜同层窗 | 任选一个探头 | 标重叠并拒用重叠段 | `app/modules/assignment/windows.py` | `tests/test_assignment.py::test_second_probe_at_same_position_marks_overlap_only` |
+| TRAP-26 | 闭馆前两柜同时段持续异常 | 逐柜记成两次故障，或全并成一次掩盖单柜问题 | 按小时重叠并案为共同环境事件，未并案段须由邻柜稳定柜时反证，缺证保留原段 | `app/modules/attribution/attribution.py` | `tests/test_attribution.py` |
+| TRAP-27 | 邻柜某异常小时整柜缺读数 | 误判为本柜单柜责任 | 缺小时与缺证柜时都计入 gaps，结论保留为 INSUFFICIENT_EVIDENCE | `app/modules/attribution/attribution.py` | `tests/test_attribution.py::test_missing_whole_hour_in_other_cabinet_is_also_insufficient` |
 
 真实反例还有迁移前一分钟的下层读数不能与迁移后的上层配对，近中点无证读数不能挤掉同小时有效候选，区间端点的展示舍入不能改变判级，缺证切断连续异常，工单不能重复清销同一段。
+
+## 跨柜归因规则
+
+- 输入为已判级柜时与各柜异常段；按 `[起, 止)` 小时重叠，用并查集把不同柜的异常段并为同一环境事件，同柜段互不连接。事件编号 `ENV-E01…` 按最早起始小时和柜号固定排序。
+- 并案组含两个及以上柜号时，组内每段判为 `COMMON_EVENT`，证据列为其他柜重叠小时的异常柜时及原行号。
+- 未并案的段，逐小时核对其余登记柜：每个异常小时都有邻柜稳定柜时反证才判 `SINGLE_CABINET`；任一邻柜在该小时缺证（缺小时、缺证或跨阈值）则判 `INSUFFICIENT_EVIDENCE` 并在 `retained` 中保留原段号，`gaps` 列出缺证柜时。只有一个登记柜时无柜可对照，一律保留。
+- 归因结论在 `evaluate()` 内随归卷一次算出并写入证据包，页面与 `export` 共用同一 `result_sha256`；处置标记 `handled` 由工单勾稽结果在接口层派生，不入证据摘要。归卷键不变时重跑只复用旧记录，生成失败（如图档截断、存储回滚）不覆盖旧版结论。
 
 ## 对账规则
 
